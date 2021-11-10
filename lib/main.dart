@@ -36,7 +36,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
   late String history = '';
   late String textToDisplay = '0';
   late String res;
-  late String operation;
+  late String operation = '';
 
   _appBar() {
     return AppBar(
@@ -81,13 +81,18 @@ class _CalculatorPageState extends State<CalculatorPage> {
       _clearCurrentDisplay();
     } else if (value == 'AC') {
       _clearAllDisplay();
-    } else if (value == '+' || value == '-' || value == '×' || value == '÷' ) {
+    } else if (value == '+' || value == '-' || value == '×' || value == '÷' || value == '%' ) {
       _operation(value);
     } else if (value == '=') {
       _sumValue(value);
     }else if (value == '.'){
       _dotOperation(value);
     } else {
+
+      if (textToDisplay.contains('+') || textToDisplay.contains('-') || textToDisplay.contains('×') || textToDisplay.contains('÷') || textToDisplay.contains('%')) {
+        textToDisplay = textToDisplay.replaceFirst(textToDisplay[0], '');
+      }
+
       if  (textToDisplay.contains('.')) {
       res = double.parse(textToDisplay + value).toString();
       } else {
@@ -106,16 +111,16 @@ class _CalculatorPageState extends State<CalculatorPage> {
     print('clearCurrentDisplay');
     firstNum = 0;
     secondNum = 0;
-    textToDisplay = '';
-    res = '';
+    textToDisplay = '0';
+    res = '0';
   }
 
   _clearAllDisplay() {
     print('clearAllDisplay');
     firstNum = 0;
     secondNum = 0;
-    textToDisplay = '';
-    res = '';
+    textToDisplay = '0';
+    res = '0';
     history = '';
   }
 
@@ -133,6 +138,12 @@ class _CalculatorPageState extends State<CalculatorPage> {
 
   _sumValue(String value) {
     secondNum = double.parse(textToDisplay);
+    if (operation == '') {
+      res = (textToDisplay).toString();
+      history =
+          textToDisplay.toString();
+    }
+
     if (operation == '+') {
       res = (firstNum + secondNum).toString();
       history =
@@ -156,6 +167,14 @@ class _CalculatorPageState extends State<CalculatorPage> {
       history =
           firstNum.toString() + operation.toString() + secondNum.toString();
     }
+
+    if (operation == '%') {
+      res = (firstNum % secondNum).toString();
+      history =
+          firstNum.toString() + operation.toString() + secondNum.toString();
+    }
+
+    operation = '';
 
   }
 
